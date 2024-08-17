@@ -1,0 +1,15 @@
+services:
+  backend:
+    container_name: backend
+    env_file:
+      - .env
+    build: ./backend/
+    ports:
+      - 3000:3000
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/
+          target: /opt/app/backend/
+        - action: rebuild
+          path: ./backend/package.json
