@@ -42,6 +42,7 @@ async function checkout_abandoned_webhook_controller(req, res) {
         customer_email:      customer_email,
         checkout_created_at: checkout_created_at,
         delay:               delay,
+        schedule_offset:     0,
         msg:                 message_schedule[0].msg
     };
 

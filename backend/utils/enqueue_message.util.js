@@ -14,7 +14,7 @@ async function enqueue_message(key, msg, delay) {
 
     // enqueue the msg
     await bmq_queue.add(key, msg, { delay: delay, jobId: bmq_job_id }).then(() => {
-        logger.info(`[enqueued new msg for customer <${msg.customer_id}> <${msg.customer_email}> - delay ${delay/1000/60/60} hrs`);
+        logger.info(`[enqueued new msg for customer <${msg.customer_id}> <${msg.customer_email}> - delay ${msg.delay/1000/60/60} hrs after checkout abandoned`);
     });
 }
 
