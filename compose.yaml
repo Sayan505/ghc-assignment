@@ -13,3 +13,39 @@ services:
           target: /opt/app/backend/
         - action: rebuild
           path: ./backend/package.json
+    depends_on:
+      redis:
+        condition: service_healthy
+
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    expose:
+      - 6379:6379
+    volumes:
+      - redis-data:/data/
+    healthcheck:
+      test: redis-cli ping
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    env_file:
+      - .env
+    expose:
+      - 27017:27017
+    volumes:
+      - mongo-data:/data/db/
+
+
+volumes:
+  redis-data:
+    driver: local
+  mongo-data:
+    driver: local
+
