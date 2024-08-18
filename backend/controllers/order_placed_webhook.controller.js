@@ -22,7 +22,7 @@ async function order_placed_webhook_controller(req, res) {
 
     // if an order is placed, check if last_notified_at != undefined,
     // if true, then the order was placed through the notifications
-    const checkout = await Checkout.findOneAndUpdate({ customer_id: customer_id }, { is_order_placed: true });
+    const checkout = await Checkout.findOneAndUpdate({ customer_id: customer_id, is_order_placed: false }, { is_order_placed: true });
     if(checkout && checkout.last_notified_at) {
         order.last_notified_at            = checkout.last_notified_at;
         order.is_order_placed_after_notif = true;
