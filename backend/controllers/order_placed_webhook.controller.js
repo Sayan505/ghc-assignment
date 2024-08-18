@@ -26,6 +26,7 @@ async function order_placed_webhook_controller(req, res) {
     if(checkout && checkout.last_notified_at) {
         order.last_notified_at            = checkout.last_notified_at;
         order.is_order_placed_after_notif = true;
+        order.notified_ntimes             = checkout.notified_ntimes;
     }
 
     await order.save();
