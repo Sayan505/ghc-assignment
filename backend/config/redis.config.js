@@ -1,6 +1,6 @@
 const redis_config = {
-    host: process.env.REDIS_HOST || "redis",
-    port: parseInt(process.env.REDIS_HOST) || 6379
+    host: process.env.REDIS_HOST           || "redis",
+    port: parseInt(process.env.REDIS_PORT) || 6379
 };
 
 
