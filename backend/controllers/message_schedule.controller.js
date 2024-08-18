@@ -1,7 +1,6 @@
 import {
     get_message_schedule,
     set_message_schedule,
-    message_schedule_schema_ajv
 } from "../config/message_schedule.config.js";
 
 
@@ -10,8 +9,9 @@ async function get_message_schedule_controller(req, res) {
 }
 
 async function set_message_schedule_controller(req, res) {
-    const result = set_message_schedule(req.body);
-    return res.status(200).send({result});
+    const result = set_message_schedule(req.body) ? "success" : "invalid schema";
+
+    return res.status(200).send({ status: result });
 }
 
 

@@ -1,12 +1,12 @@
 import express from "express";
 import cors    from "cors";
 
-import logger  from "./utils/logger.util.js";
+import logger            from "./utils/logger.util.js";
+import graceful_shutdown from "./utils/graceful_shutdown.util.js";
 
-import graceful_shutdown    from "./utils/graceful_shutdown.util.js";
-
-import dbconfig             from "./config/mongoose.config.js";
-import { start_bmq_worker } from "./config/bullmq.config.js";
+import dbconfig                  from "./config/mongoose.config.js";
+import { start_bmq_worker }      from "./config/bullmq.config.js";
+import { init_message_schedule } from "./config/message_schedule.config.js"
 
 // import routes
 import webhooks_route         from "./routes/webhooks.route.js";
@@ -31,6 +31,8 @@ app.use("/api/message_schedule", message_schedule_route);
 
 // connect to db
 dbconfig.connect_db().then(() => {
+    init_message_schedule();
+
     // start server
     const server = app.listen(SRV_PORT, () => {
         logger.info(`[server listening @ port ${SRV_PORT}]`);
