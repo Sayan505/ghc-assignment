@@ -1,9 +1,9 @@
 import enqueue_message  from "../utils/enqueue_message.util.js";
 import logger           from "../utils/logger.util.js";
 
-import message_schedule from "../config/message_schedule.config.js";
-
 import Checkout         from "../models/checkouts.model.js";
+
+import { get_message_schedule } from "../config/message_schedule.config.js";
 
 
 async function checkout_abandoned_webhook_controller(req, res) {
@@ -23,9 +23,19 @@ async function checkout_abandoned_webhook_controller(req, res) {
     }).toObject();
     delete checkout._id;
 
+    // record the checkout
     await Checkout.replaceOne({ customer_id: customer_id }, checkout, { upsert: true });
 
+    // get the msg schedule
+    const message_schedule = get_message_schedule();
+    if(message_schedule.length < 1) {
+        logger.info(`[no new msg scheduled for customer <${msg.customer_id}> <${msg.customer_email}> - reason: schedule empty`);
+        return res.status(200).send({
+            status: "success"
+        });
+    }
 
+    // craft the message
     const delay    = message_schedule[0].delay;
     const msg      = {
         customer_id:         customer_id,
