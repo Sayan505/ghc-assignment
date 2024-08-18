@@ -17,6 +17,22 @@ services:
       redis:
         condition: service_healthy
 
+  frontend:
+    container_name: frontend
+    environment:
+      - PORT=3001
+    build: ./frontend/
+    ports:
+      - 3001:3001
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/
+          target: /opt/app/frontend/
+        - action: rebuild
+          path: ./frontend/package.json
+    depends_on:
+      - backend
 
   redis:
     image: redis:latest
@@ -31,7 +47,6 @@ services:
       timeout: 3s
       retries: 5
 
-  
   mongodb:
     image: mongo:latest
     container_name: mongodb
@@ -41,7 +56,6 @@ services:
       - 27017:27017
     volumes:
       - mongo-data:/data/db/
-
 
 volumes:
   redis-data:
