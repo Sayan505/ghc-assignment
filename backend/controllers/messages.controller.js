@@ -7,6 +7,16 @@ async function messages_controller(req, res) {
 
 
     const npages = Math.ceil((await Messages.countDocuments()) / max_items_per_page);
+
+    if(npages == 0) {
+        return res.status(200).send({
+            curr_page:          1,
+            total_pages:        0,
+            max_items_per_page: max_items_per_page,
+            data: []
+        });
+    }
+
     if(requested_page > npages || requested_page < 1) {
         return res.status(400).send({
             status:      "page does not exist",
@@ -14,6 +24,7 @@ async function messages_controller(req, res) {
             data:        []
         });
     }
+
 
     const skip     = (requested_page - 1) * max_items_per_page;
     const messages = await Messages.find({}).skip(skip).limit(max_items_per_page);
