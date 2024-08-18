@@ -29,7 +29,7 @@ async function checkout_abandoned_webhook_controller(req, res) {
     // get the msg schedule
     const message_schedule = get_message_schedule();
     if(message_schedule.length < 1) {
-        logger.info(`[no new msg scheduled for customer <${msg.customer_id}> <${msg.customer_email}> - reason: schedule empty`);
+        logger.info(`[no new msg scheduled for customer <${customer_id}> <${customer_email}> - reason: schedule empty`);
         return res.status(200).send({
             status: "success"
         });
