@@ -2,7 +2,7 @@ import logger           from "../utils/logger.util.js";
 
 import enqueue_message  from "../utils/enqueue_message.util.js";
 
-import message_schedule from "../config/message_schedule.config.js";
+import { get_message_schedule } from "../config/message_schedule.config.js";
 
 import Checkout         from "../models/checkouts.model.js";
 import Message          from "../models/messages.model.js";
@@ -32,22 +32,31 @@ export default async function send_message(job) {
         checkout_created_at: checkout_created_at
     });
     await message.save();
-    await Checkout.updateOne({ customer_id: customer_id }, { last_notified_at: message.notification_timestamp });
+    await Checkout.updateOne({ customer_id: customer_id }, { $inc: { notified_ntimes: 1 }, last_notified_at: message.notification_timestamp });
     logger.info(`[NOTIFICATION SENT TO CUSTOMER.ID: ${customer_id}] @ ${message.notification_timestamp}`);
 
 
-    // TODO: calc next delay
-    // enqueue the next msg if required (msg with the nearest higher delay)
-    const prev_delay = job.data.delay;
-    const next_delay = message_schedule[1].delay;
+    // enqueue the next msg if required (if schedule not complete)
+    const message_schedule     = get_message_schedule();
+    const next_schedule_offset = checkout.notified_ntimes + 1;
+    if(next_schedule_offset >= message_schedule.length) {
+        logger.info(`[no new msg will be further scheduled for customer <${msg.customer_id}> <${msg.customer_email}> - reason: schedule complete`);
+        return res.status(200).send({
+            status: "success"
+        });
+    }
 
+    // craft the next msg
+    const prev_delay = job.data.delay;
+    const next_delay = message_schedule[next_schedule_offset].delay;
     const msg        = {
         customer_id:         customer_id,
         customer_email:      customer_email,
         checkout_created_at: checkout_created_at,
         delay:               next_delay,
-        msg:                 message_schedule[1].msg
+        msg:                 message_schedule[next_schedule_offset].msg
     };
 
+    // enqueue it
     await enqueue_message(msg.customer_id, msg, next_delay);
 }
