@@ -9,7 +9,7 @@ async function get_message_schedule_controller(req, res) {
 }
 
 async function set_message_schedule_controller(req, res) {
-    const result = set_message_schedule(req.body) ? "success" : "invalid schema";
+    const result = await set_message_schedule(req.body) ? "success" : "invalid schema";
 
     return res.status(200).send({ status: result });
 }
