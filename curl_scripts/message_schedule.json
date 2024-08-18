@@ -1,0 +1,14 @@
+[
+  {
+    "delay": 2000,
+    "msg": "1st reminder, 2s"
+  },
+  {
+    "delay": 6000,
+    "msg": "2nd reminder, 6s"
+  },
+  {
+    "delay": 12000,
+    "msg": "3rd reminder, 12s"
+  }
+]
