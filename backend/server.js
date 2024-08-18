@@ -3,28 +3,30 @@ import cors    from "cors";
 
 import logger  from "./utils/logger.util.js";
 
-import graceful_shutdown    from "./utils/graceful_shutdown.util.js"
+import graceful_shutdown    from "./utils/graceful_shutdown.util.js";
 
 import dbconfig             from "./config/mongoose.config.js";
 import { start_bmq_worker } from "./config/bullmq.config.js";
 
 // import routes
-import webhooks_route from "./routes/webhooks.route.js";
-import messages_route from "./routes/messages.route.js";
-import orders_route   from "./routes/orders.route.js";
+import webhooks_route         from "./routes/webhooks.route.js";
+import messages_route         from "./routes/messages.route.js";
+import orders_route           from "./routes/orders.route.js";
+import message_schedule_route from "./routes/message_schedule.route.js";
 
 
 const app      = express();
-const SRV_PORT = parseInt(process.env.BACKEND_PORT) || 3000;
+const SRV_PORT = parseInt(process.env.EXPRESS_PORT) || 3000;
 
 app.use(cors());
 app.use(express.json());
 
 
 // register routes
-app.use("/webhook",      webhooks_route);
-app.use("/api/messages", messages_route);
-app.use("/api/orders",   orders_route);
+app.use("/webhook",              webhooks_route);
+app.use("/api/messages",         messages_route);
+app.use("/api/orders",           orders_route);
+app.use("/api/message_schedule", message_schedule_route);
 
 
 // connect to db
