@@ -15,4 +15,12 @@ GET  /api/orders?page=1    # get orders placed through these messages (paginated
 
 GET  /api/message_schedule/  # get current msg schedule
 POST /api/message_schedule/  # set new msg schedule
+
+# demo curl scripts included in the /curl_scripts/ directory
+```
+
+### Frontend:
+```
+/messages
+/orders
 ```
