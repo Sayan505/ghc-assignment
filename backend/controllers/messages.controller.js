@@ -10,7 +10,7 @@ async function messages_controller(req, res) {
 
     if(npages == 0) {
         return res.status(200).send({
-            curr_page:          1,
+            curr_page:          0,
             total_pages:        0,
             max_items_per_page: max_items_per_page,
             data: []
